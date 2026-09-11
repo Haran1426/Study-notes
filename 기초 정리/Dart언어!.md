@@ -430,7 +430,7 @@ launchDate 없음
 ```dart
 launchDate?.year
 ```
-
+	
 `launchDate`가 `null`이 아닐 때만 `year`에 접근한다.
 
 반대로 `launchDate`가 `null`이면 `year`를 읽지 않고 결과도 `null`이 된다.
@@ -691,7 +691,7 @@ Future<void> printWithDelay(String message) async {
 }
 ```
 
-비동기 처리는 작업 결과가 즉시 나오지 않는 상황에서 사용한다.
+	비동기는 응답을 기다리지 않고 다음 작업을 진행한 뒤, 완료되면 결과를 처리합니다.
 
 예를 들면
 
