@@ -4,13 +4,29 @@ void main() {
   runApp(const CalculatorApp());
 }
 
-class CalculatorApp extends StatelessWidget {
+
+class CalculatorApp extends StatefulWidget {
   const CalculatorApp({super.key});
 
-
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  State<CalculatorApp> createState() => _CalculatorAppState();
+}
+
+class _CalculatorAppState extends State<CalculatorApp> {
+  int displayValue = 0;
+
+  void inputNumber(int number){
+    displayValue = displayValue * 10 + number;
+
+    setState(() {
+
+    });
+
+  }
+
+
+@override
+Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -36,9 +52,9 @@ class CalculatorApp extends StatelessWidget {
                   ),
                   child: Align(
                     alignment: Alignment.centerRight,
-                    child: const Text(
-                      '0',
-                      style: TextStyle(
+                    child: Text(
+                      displayValue.toString(),
+                      style: const TextStyle(
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
                       ),
@@ -210,7 +226,9 @@ class CalculatorApp extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            inputNumber(7);
+                          },
                           child: const Text(
                             '7',
                             style: TextStyle(fontSize: 18),
@@ -228,7 +246,7 @@ class CalculatorApp extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {inputNumber(8);},
                           child: const Text(
                             '8',
                             style: TextStyle(fontSize: 18),
@@ -246,7 +264,7 @@ class CalculatorApp extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {inputNumber(9);},
                           child: const Text(
                             '9',
                             style: TextStyle(fontSize: 18),
@@ -286,7 +304,7 @@ class CalculatorApp extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {inputNumber(4);},
                           child: const Text(
                             '4',
                             style: TextStyle(fontSize: 18),
@@ -304,7 +322,7 @@ class CalculatorApp extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {inputNumber(5);},
                           child: const Text(
                             '5',
                             style: TextStyle(fontSize: 18),
@@ -322,7 +340,7 @@ class CalculatorApp extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {inputNumber(6);},
                           child: const Text(
                             '6',
                             style: TextStyle(fontSize: 18),
@@ -362,7 +380,7 @@ class CalculatorApp extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {inputNumber(1);},
                           child: const Text(
                             '1',
                             style: TextStyle(fontSize: 18),
@@ -380,7 +398,7 @@ class CalculatorApp extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {inputNumber(2);},
                           child: const Text(
                             '2',
                             style: TextStyle(fontSize: 18),
@@ -398,7 +416,7 @@ class CalculatorApp extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {inputNumber(3);},
                           child: const Text(
                             '3',
                             style: TextStyle(fontSize: 18),
@@ -456,7 +474,7 @@ class CalculatorApp extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {inputNumber(0);},
                           child: const Text(
                             '0',
                             style: TextStyle(fontSize: 18),
