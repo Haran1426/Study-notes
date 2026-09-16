@@ -22,6 +22,8 @@ class _CalculatorAppState extends State<CalculatorApp>
 
   bool shouldResetDisplay = false;
 
+  List History = [];
+
   void inputNumber(int number)
   {
     if (shouldResetDisplay || displayText == '0')
@@ -38,7 +40,51 @@ class _CalculatorAppState extends State<CalculatorApp>
     {
     });
   }
+  void calculate()
+  {
+    if (operator.isEmpty)
+    {
+      return;
+    }
 
+    double secondValue = double.parse(displayText);
+    double result = 0.0;
+
+    if (operator == "+")
+    {
+      result = firstValue + secondValue;
+    }
+    else if (operator == "-")
+    {
+      result = firstValue - secondValue;
+    }
+    else if (operator == "×")
+    {
+      result = firstValue * secondValue;
+    }
+    else if (operator == "÷")
+    {
+      if (secondValue == 0)
+      {
+        displayText = 'Error';
+        operator = '';
+        shouldResetDisplay = true;
+
+        return;
+      }
+
+      result = firstValue / secondValue;
+    }
+
+    displayText = formatResult(result);
+    firstValue = result;
+    operator = '';
+    shouldResetDisplay = true;
+
+    setState(()
+    {
+    });
+  }
   void clear()
   {
     displayText = '0';
@@ -77,7 +123,17 @@ class _CalculatorAppState extends State<CalculatorApp>
     {
     });
   }
+  void PercentNumber()
+  {
+    double value = double.parse(displayText);
 
+    value = value / 100;
+
+    displayText = formatResult(value);
+    shouldResetDisplay = true;
+
+    setState(() {});
+  }
   void ReciprocalNumber()
   {
     double value = double.parse(displayText);
@@ -204,51 +260,7 @@ class _CalculatorAppState extends State<CalculatorApp>
     setState(() {});
   }
 
-  void calculate()
-  {
-    if (operator.isEmpty)
-    {
-      return;
-    }
 
-    double secondValue = double.parse(displayText);
-    double result = 0.0;
-
-    if (operator == "+")
-    {
-      result = firstValue + secondValue;
-    }
-    else if (operator == "-")
-    {
-      result = firstValue - secondValue;
-    }
-    else if (operator == "×")
-    {
-      result = firstValue * secondValue;
-    }
-    else if (operator == "÷")
-    {
-      if (secondValue == 0)
-      {
-        displayText = 'Error';
-        operator = '';
-        shouldResetDisplay = true;
-
-        return;
-      }
-
-      result = firstValue / secondValue;
-    }
-
-    displayText = formatResult(result);
-    firstValue = result;
-    operator = '';
-    shouldResetDisplay = true;
-
-    setState(()
-    {
-    });
-  }
 
   String formatResult(double value)
   {
@@ -324,6 +336,7 @@ class _CalculatorAppState extends State<CalculatorApp>
                           ),
                           onPressed: ()
                           {
+                            PercentNumber();
                           },
                           child: const Text(
                             '%',
