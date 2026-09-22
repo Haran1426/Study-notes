@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'notepad/note.dart';
 import 'notepad/notepad_view.dart';
 
 void main() {
   runApp(const NotepadApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class NotepadApp extends StatelessWidget {
+  const NotepadApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const NotepadApp (title: 'Notepad Page'),
+      home: NotepadView(),
     );
   }
 }
