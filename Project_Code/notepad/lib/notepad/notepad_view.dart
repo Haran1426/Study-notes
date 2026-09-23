@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'note.dart';
 
+import "package:url_launcher/url_launcher.dart";
 
 class NotepadView extends StatefulWidget {
   const NotepadView({super.key});
@@ -20,8 +22,8 @@ class _NotepadViewState extends State<NotepadView> {
   void _addNote() {
     final content = _contentController.text.trim();
     final alias = _aliasController.text.trim();
-    print(content);
-    print(alias);
+
+    if (content.isEmpty) return;
 
 
     final note = Note(
@@ -33,6 +35,42 @@ class _NotepadViewState extends State<NotepadView> {
     setState(() {
       _notes.add(note);
     });
+
+
+    _contentController.clear();
+    _aliasController.clear();
+  }
+
+  Future<void> _copyNote(String content) async {
+    await Clipboard.setData(
+      ClipboardData(text: content),
+    );
+  }
+  void _delNote(String id) {
+    setState(() {
+      _notes.removeWhere((note) => note.id == id);
+    });
+  }
+
+
+  bool _isLink(String content) {
+    final uri = Uri.tryParse(content.trim());
+
+    return uri != null &&
+        (uri.scheme == 'http' || uri.scheme == 'https') &&
+        uri.host.isNotEmpty;
+  }
+  Future<void> _openLink(String content) async {
+    final uri = Uri.parse(content);
+
+    await launchUrl(uri);
+  }
+
+  @override
+  void dispose() {
+    _contentController.dispose();
+    _aliasController.dispose();
+    super.dispose();
   }
   @override
   Widget build(BuildContext context) {
@@ -68,7 +106,7 @@ class _NotepadViewState extends State<NotepadView> {
                         minLines: 2,
                         maxLines: 4,
                         decoration: InputDecoration(
-                          hintText: '텍스트 또는 링크(ctl+Enter 로 추가)',
+                          hintText: '텍스트 또는 링크(Ctrl+Enter로 추가)',
                           border: OutlineInputBorder(),
                         ),
                       ),
@@ -105,20 +143,96 @@ class _NotepadViewState extends State<NotepadView> {
                 const SizedBox(height: 16),
 
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: _notes.length,
-                    itemBuilder: (context, index) {
-                      final note = _notes[index];
+                    child: ListView.builder(
+                      itemCount: _notes.length,
+                      itemBuilder: (context, index){
+                        final note = _notes[index];
+                        final alias = note.alias;
 
-                      return Container(
-                        width: double.infinity,
-                        margin: const EdgeInsets.only(bottom: 12),
-                        padding: const EdgeInsets.all(12),
-                        color: Colors.white,
-                        child: Text(note.content),
-                      );
-                    },
-                  ),
+                        final isLink = _isLink(note.content);
+
+                        return Container(
+                          width: double.infinity,
+                          margin: const EdgeInsets.only(bottom: 12),
+                          padding: const EdgeInsets.all(12),
+                          color: Colors.white,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    InkWell(
+                                      onTap: isLink
+                                          ? () => _openLink(note.content)
+                                          : null,
+                                      child: Text(
+                                        note.content,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: isLink ? Colors.blue : Colors.black,
+                                          decoration: isLink
+                                              ? TextDecoration.underline
+                                              : TextDecoration.none,
+                                        ),
+                                      ),
+                                    ),
+
+                                    if (alias != null)
+                                      const SizedBox(height: 4),
+
+                                    if (alias != null)
+                                      Text(
+                                        alias,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+
+                              OutlinedButton(
+                                onPressed: () {
+                                  _copyNote(note.content);
+                                },
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.grey.shade700,
+                                  side: BorderSide(
+                                    color: Colors.grey.shade300,
+                                  ),
+                                  minimumSize: const Size(56, 42),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: const Text('복사'),
+                              ),
+
+                              const SizedBox(width: 8),
+
+                              OutlinedButton(
+                                onPressed: () {
+                                  _delNote(note.id);
+                                },
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.red.shade600,
+                                  side: BorderSide(
+                                    color: Colors.red.shade200,
+                                  ),
+                                  minimumSize: const Size(56, 42),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: const Text('삭제'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                 ),
               ],
             ),

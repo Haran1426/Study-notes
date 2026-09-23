@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'notepad/note.dart';
 import 'notepad/notepad_view.dart';
 
 void main() {
